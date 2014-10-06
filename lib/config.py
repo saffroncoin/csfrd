@@ -33,7 +33,7 @@ OP_RETURN_MAX_SIZE = 80 # bytes
 
 
 # Currency agnosticism
-BTC = 'SFR'
+BTC = 'BTC'
 XCP = 'cSFR'
 
 BTC_NAME = 'Saffroncoin'
@@ -70,7 +70,7 @@ BURN_END_MAINNET_TESTCOIN = 2500000     # A long time.
 
 BLOCK_FIRST_MAINNET = 205530
 BURN_START_MAINNET = 225260
-BURN_END_MAINNET = 225340
+BURN_END_MAINNET = 225380
 
 
 # Protocol defaults

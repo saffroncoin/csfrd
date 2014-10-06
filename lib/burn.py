@@ -39,11 +39,11 @@ def compose (db, source, quantity, overburn=False):
     problems = validate(db, source, destination, quantity, util.last_block(db)['block_index'], overburn=overburn)
     if problems: raise exceptions.BurnError(problems)
 
-    # Check that a maximum of 1 BTC total is burned per address.
+    # Check that a maximum of 30000 SFR total is burned per address.
     burns = list(cursor.execute('''SELECT * FROM burns WHERE (status = ? AND source = ?)''', ('valid', source)))
     already_burned = sum([burn['burned'] for burn in burns])
-    if quantity > (1 * config.UNIT - already_burned) and not overburn:
-        raise exceptions.BurnError('1 {} may be burned per address'.format(config.BTC))
+    if quantity > (30000 * config.UNIT - already_burned) and not overburn:
+        raise exceptions.BurnError('30000 SFR may be burned per address')
 
     cursor.close()
     return (source, [(destination, quantity)], None)

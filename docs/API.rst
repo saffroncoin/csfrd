@@ -101,7 +101,7 @@ Python Example
       url, data=json.dumps(payload), headers=headers, auth=auth).json()
     print("GET_BALANCES RESULT: ", response)
 
-    #Get all burns between blocks 280537 and 280539 where greater than .2 BTC was burned, sorting by tx_hash (ascending order)
+    #Get all burns between blocks 280537 and 280539 where greater than .2 SFR was burned, sorting by tx_hash (ascending order)
     #With this (and the rest of the examples below) we use positional arguments, instead of keyword-based arguments
     payload = {
       "method": "get_burns",
@@ -118,10 +118,10 @@ Python Example
       url, data=json.dumps(payload), headers=headers, auth=auth).json()
     print("GET_BURNS RESULT: ", response)
     
-    #Fetch all debits for > 2 XCP between blocks 280537 and 280539, sorting the results by quantity (descending order)
+    #Fetch all debits for > 2 cSFR between blocks 280537 and 280539, sorting the results by quantity (descending order)
     payload = {
       "method": "get_debits",
-      "params": {"filters": [{'field': 'asset', 'op': '==', 'value': "XCP"},
+      "params": {"filters": [{'field': 'asset', 'op': '==', 'value': "cSFR"},
                              {'field': 'quantity', 'op': '>', 'value': 200000000}],
                 "filterop": 'AND',
                 "order_by": 'quantity',
@@ -134,13 +134,13 @@ Python Example
     print("GET_DEBITS RESULT: ", response)
     
     
-    #Send 1 XCP (specified in satoshis) from one address to another (you must have the sending address in your bitcoind wallet
+    #Send 1 cSFR (specified in satoshis) from one address to another (you must have the sending address in your bitcoind wallet
     # and it will be broadcast as a multisig transaction
     payload = {
       "method": "create_send",
       "params": {'source': "1CUdFmgK9trTNZHALfqGvd8d6nUZqH2AAf",
                  'destination': "17rRm52PYGkntcJxD2yQF9jQqRS4S2nZ7E",
-                 'asset': "XCP",
+                 'asset': "cSFR",
                  'quantity': 100000000},
       "jsonrpc": "2.0",
       "id": 0,
@@ -213,10 +213,10 @@ assets
 ^^^^^^^^^
 
 Everywhere in the API an asset is referenced as an uppercase alphabetic (base
-26) string name of the asset, of at least 4 characters in length and not starting with 'A', or as 'BTC' or 'XCP' as appropriate. Examples are:
+26) string name of the asset, of at least 4 characters in length and not starting with 'A', or as 'SFR' or 'cSFR' as appropriate. Examples are:
 
-- "BTC"
-- "XCP"
+- "SFR"
+- "cSFR"
 - "FOOBAR"
 
 .. _quantitys:
@@ -232,7 +232,7 @@ Examples:
 - 4381030000 = 43.8103 (if divisible asset)
 - 4381030000 = 4381030000 (if indivisible asset) 
 
-**NOTE:** XCP and BTC themselves are divisible assets, and thus are listed in satoshis.
+**NOTE:** cSFR and SFR themselves are divisible assets, and thus are listed in satoshis.
 
 .. _floats:
 
@@ -374,8 +374,8 @@ For example: ``get_balances``, ``get_credits``, ``get_debits``, etc are all vali
 
 **Notes:**
 
-  * Please note that the ``get_balances`` API call will not return balances for BTC itself. It only returns balances
-    for XCP and other Counterparty assets. To get BTC-based balances, use an existing system such as Insight, blockr.io,
+  * Please note that the ``get_balances`` API call will not return balances for SFR itself. It only returns balances
+    for cSFR and other Counterparty assets. To get SFR-based balances, use an existing system such as Insight, blockr.io,
     or blockchain.info.
 
 
@@ -453,13 +453,13 @@ Return the message feed messages whose ``message_index`` values are contained in
 
   A list containing a `message <#message-object>`_ for each message found in the specified ``message_indexes`` list. If none were found, ``[]`` (empty list) is returned.
 
-.. _get_xcp_supply:
+.. _get_csfr_supply:
 
-get_xcp_supply
+get_csfr_supply
 ^^^^^^^^^^^^^^^
-**get_xcp_supply()**
+**get_csfr_supply()**
 
-Gets the current total quantity of XCP in existance (i.e. quantity created via proof-of-burn, minus quantity
+Gets the current total quantity of cSFR in existance (i.e. quantity created via proof-of-burn, minus quantity
 destroyed via asset issuances, etc).
 
 **Parameters:**
@@ -468,7 +468,7 @@ destroyed via asset issuances, etc).
 
 **Return:** 
 
-  The :ref:`quantity <quantitys>` of XCP currently in existance.
+  The :ref:`quantity <quantitys>` of cSFR currently in existance.
 
 .. _get_block_info:
 
@@ -595,8 +595,8 @@ Issue a bet against a feed.
   * **feed_address (string):** The address that host the feed to be bet on.
   * **bet_type (integer):** 0 for Bullish CFD, 1 for Bearish CFD, 2 for Equal, 3 for NotEqual.
   * **deadline (integer):** The time at which the bet should be decided/settled, in Unix time.
-  * **wager (integer):** The :ref:`quantity <quantitys>` of XCP to wager.
-  * **counterwager (integer):** The minimum :ref:`quantity <quantitys>` of XCP to be wagered against, for the bets to match.
+  * **wager (integer):** The :ref:`quantity <quantitys>` of cSFR to wager.
+  * **counterwager (integer):** The minimum :ref:`quantity <quantitys>` of cSFR to be wagered against, for the bets to match.
   * **target_value (float):** Target value for Equal/NotEqual bet
   * **leverage (integer):** Leverage, as a fraction of 5040
   * **encoding (string):** The encoding method to use, see :ref:`this section <encoding_param>` for more info.  
@@ -642,7 +642,7 @@ create_btcpay
 **create_btcpay(order_match_id, encoding='multisig', pubkey=null,
 allow_unconfirmed_inputs=false, fee=null, fee_per_kb=10000)**
 
-Create and (optionally) broadcast a BTCpay message, to settle an Order Match for which you owe BTC. 
+Create and (optionally) broadcast a BTCpay message, to settle an Order Match for which you owe SFR. 
 
 **Parameters:**
 
@@ -663,12 +663,12 @@ create_burn
 ^^^^^^^^^^^^^^
 **create_burn(source, quantity, encoding='multisig', pubkey=null, allow_unconfirmed_inputs=false, fee=null, fee_per_kb=10000)**
 
-Burn a given quantity of BTC for XCP (**only possible between blocks 278310 and 283810**).
+Burn a given quantity of SFR for cSFR (**only possible between blocks 278310 and 283810**).
 
 **Parameters:**
 
-  * **source (string):** The address with the BTC to burn.
-  * **quantity (integer):** The :ref:`quantity <quantitys>` of BTC to burn (1 BTC maximum burn per address).
+  * **source (string):** The address with the SFR to burn.
+  * **quantity (integer):** The :ref:`quantity <quantitys>` of SFR to burn (30000 SFR maximum burn per address).
   * **encoding (string):** The encoding method to use, see :ref:`this section <encoding_param>` for more info.  
   * **pubkey (string):** The pubkey hex string. Required if multisig transaction encoding is specified for a key external to ``counterpartyd``'s local wallet. See :ref:`this section <encoding_param>` for more info.
   * **allow_unconfirmed_inputs (boolean):** Set to ``true`` to allow this transaction to utilize unconfirmed UTXOs as inputs.
@@ -735,7 +735,7 @@ Issue a dividend on a specific user defined asset.
   * **source (string):** The address that will be issuing the dividend (must have the ownership of the asset which the dividend is being issued on).
   * **asset (string):** The :ref:`asset <assets>` that the dividends are being rewarded on.
   * **dividend_asset (string):** The :ref:`asset <assets>` that the dividends are paid in.
-  * **quantity_per_unit (integer):** The :ref:`quantity <quantitys>` of XCP rewarded per whole unit of the asset.
+  * **quantity_per_unit (integer):** The :ref:`quantity <quantitys>` of cSFR rewarded per whole unit of the asset.
   * **encoding (string):** The encoding method to use, see :ref:`this section <encoding_param>` for more info.  
   * **pubkey (string):** The pubkey hex string. Required if multisig transaction encoding is specified for a key external to ``counterpartyd``'s local wallet. See :ref:`this section <encoding_param>` for more info.
   * **allow_unconfirmed_inputs (boolean):** Set to ``true`` to allow this transaction to utilize unconfirmed UTXOs as inputs.
@@ -763,7 +763,7 @@ Issue a new asset, issue more of an existing asset, lock an asset, or transfer t
   * **divisible (boolean):** Whether this asset is divisible or not (if a transfer, this value must match the value specified when the asset was originally issued).
   * **callable_ (boolean):** Whether the asset is callable or not.
   * **call_date (integer):** The timestamp at which the asset may be called back, in Unix time. Only valid for callable assets.
-  * **call_price (float):** The :ref:`price <floats>` per unit XCP at which the asset may be called back, on or after the specified call_date. Only valid for callable assets.
+  * **call_price (float):** The :ref:`price <floats>` per unit cSFR at which the asset may be called back, on or after the specified call_date. Only valid for callable assets.
   * **description (string):** A textual description for the asset. 52 bytes max.
   * **transfer_destination (string):** The address to receive the asset (only used when *transferring* assets -- leave set to ``null`` if issuing an asset).
   * **encoding (string):** The encoding method to use, see :ref:`this section <encoding_param>` for more info.  
@@ -800,8 +800,8 @@ Issue an order request.
   * **get_quantity (integer):** The :ref:`quantity <quantitys>` of the asset requested in return.
   * **get_asset (string):** The :ref:`asset <assets>` requested in return.
   * **expiration (integer):** The number of blocks for which the order should be valid.
-  * **fee_required (integer):** The miners' fee required to be paid by orders for them to match this one; in BTC; required only if buying BTC (may be zero, though). If not specified or set to ``null``, this defaults to 1% of the BTC desired for purchase.
-  * **fee_provided (integer):** The miners' fee provided; in BTC; required only if selling BTC (should not be lower than is required for acceptance in a block).  If not specified or set to ``null``, this defaults to 1% of the BTC for sale. 
+  * **fee_required (integer):** The miners' fee required to be paid by orders for them to match this one; in SFR; required only if buying SFR (may be zero, though). If not specified or set to ``null``, this defaults to 1% of the SFR desired for purchase.
+  * **fee_provided (integer):** The miners' fee provided; in SFR; required only if selling SFR (should not be lower than is required for acceptance in a block).  If not specified or set to ``null``, this defaults to 1% of the SFR for sale. 
   * **encoding (string):** The encoding method to use, see :ref:`this section <encoding_param>` for more info.  
   * **pubkey (string):** The pubkey hex string. Required if multisig transaction encoding is specified for a key external to ``counterpartyd``'s local wallet. See :ref:`this section <encoding_param>` for more info.
   * **allow_unconfirmed_inputs (boolean):** Set to ``true`` to allow this transaction to utilize unconfirmed UTXOs as inputs.
@@ -818,7 +818,7 @@ create_send
 ^^^^^^^^^^^^^^
 **create_send(source, destination, asset, quantity, encoding='multisig', pubkey=null, allow_unconfirmed_inputs=false, fee=null, fee_per_kb=10000)**
 
-Send XCP or a user defined asset.
+Send cSFR or a user defined asset.
 
 **Parameters:**
 
@@ -849,7 +849,7 @@ Open a Rock-Paper-Scissors (RPS) like game.
 
   * **source (string):** The address that will be sending (must have the necessary quantity of the specified asset).
   * **possible_moves (integer):** The number of possible moves. Must be an odd number greater or equal than 3.
-  * **wager (integer):** The :ref:`quantity <quantitys>` of XCP to wager.
+  * **wager (integer):** The :ref:`quantity <quantitys>` of cSFR to wager.
   * **move_random_hash (string):** A 32 bytes hex string (64 chars): sha256(sha256(random+move)). Where random is 16 bytes random number.
   * **expiration (integer):** The number of blocks for which the game should be valid.
   * **encoding (string):** The encoding method to use, see :ref:`this section <encoding_param>` for more info.  
@@ -943,9 +943,9 @@ An object that describes a specific bet:
 * **feed_address** (*string*): The address with the feed that the bet is to be made on
 * **bet_type** (*integer*): 0 for Bullish CFD, 1 for Bearish CFD, 2 for Equal, 3 for Not Equal
 * **deadline** (*integer*): The timestamp at which the bet should be decided/settled, in Unix time.
-* **wager_quantity** (*integer*): The :ref:`quantity <quantitys>` of XCP to wager
-* **counterwager_quantity** (*integer*): The minimum :ref:`quantity <quantitys>` of XCP to be wagered by the user to bet against the bet issuer, if the other party were to accept the whole thing
-* **wager_remaining** (*integer*): The quantity of XCP wagered that is remaining to bet on
+* **wager_quantity** (*integer*): The :ref:`quantity <quantitys>` of cSFR to wager
+* **counterwager_quantity** (*integer*): The minimum :ref:`quantity <quantitys>` of cSFR to be wagered by the user to bet against the bet issuer, if the other party were to accept the whole thing
+* **wager_remaining** (*integer*): The quantity of cSFR wagered that is remaining to bet on
 * **odds** (*float*): 
 * **target_value** (*float*): Target value for Equal/NotEqual bet
 * **leverage** (*integer*): Leverage, as a fraction of 5040
@@ -978,8 +978,8 @@ An object that describes a specific occurance of two bets being matched (either 
 * **deadline** (*integer*): The timestamp at which the bet match was made, in Unix time.
 * **target_value** (*float*): Target value for Equal/NotEqual bet  
 * **leverage** (*integer*): Leverage, as a fraction of 5040
-* **forward_quantity** (*integer*): The :ref:`quantity <quantitys>` of XCP bet in the initial bet
-* **backward_quantity** (*integer*): The :ref:`quantity <quantitys>` of XCP bet in the matching bet
+* **forward_quantity** (*integer*): The :ref:`quantity <quantitys>` of cSFR bet in the initial bet
+* **backward_quantity** (*integer*): The :ref:`quantity <quantitys>` of cSFR bet in the matching bet
 * **fee_multiplier** (*integer*): 
 * **validity** (*string*): Set to "valid" if a valid order match. Any other setting signifies an invalid/improper order match
 
@@ -1004,10 +1004,10 @@ An object that describes a specific occurance of a broadcast event (i.e. creatin
 
 .. _btcpay-object:
 
-BTCPay Object
+SFRPay Object
 ^^^^^^^^^^^^^^^^^^^^^^^
 
-An object that matches a request to settle an Order Match for which BTC is owed:
+An object that matches a request to settle an Order Match for which SFR is owed:
 
 * **tx_index** (*integer*): The transaction index
 * **tx_hash** (*string*): The transaction hash
@@ -1028,8 +1028,8 @@ An object that describes an instance of a specific burn:
 * **tx_hash** (*string*): The transaction hash
 * **block_index** (*integer*): The block index (block number in the block chain)
 * **source** (*string*): The address the burn was performed from
-* **burned** (*integer*): The :ref:`quantity <quantitys>` of BTC burned
-* **earned** (*integer*): The :ref:`quantity <quantitys>` of XPC actually earned from the burn (takes into account any bonus quantitys, 1 BTC limitation, etc)
+* **burned** (*integer*): The :ref:`quantity <quantitys>` of SFR burned
+* **earned** (*integer*): The :ref:`quantity <quantitys>` of cSFR actually earned from the burn (takes into account any bonus quantitys, 30000 SFR limitation, etc)
 * **validity** (*string*): Set to "valid" if a valid burn. Any other setting signifies an invalid/improper burn
 
 
@@ -1075,7 +1075,7 @@ An object that describes an issuance of dividends on a specific user defined ass
 * **block_index** (*integer*): The block index (block number in the block chain)
 * **source** (*string*): The address that issued the dividend
 * **asset** (*string*): The :ref:`asset <assets>` that the dividends are being rewarded on 
-* **quantity_per_unit** (*integer*): The :ref:`quantity <quantitys>` of XCP rewarded per whole unit of the asset
+* **quantity_per_unit** (*integer*): The :ref:`quantity <quantitys>` of cSFR rewarded per whole unit of the asset
 * **validity** (*string*): Set to "valid" if a valid burn. Any other setting signifies an invalid/improper burn
 
 
@@ -1116,8 +1116,8 @@ An object that describes a specific order:
 * **get_remaining** (*integer*): The :ref:`quantity <quantitys>` of the specified get asset remaining for the order
 * **price** (*float*): The given exchange rate (as an exchange ratio desired from the asset offered to the asset desired)
 * **expiration** (*integer*): The number of blocks over which the order should be valid
-* **fee_provided** (*integer*): The miners' fee provided; in BTC; required only if selling BTC (should not be lower than is required for acceptance in a block)
-* **fee_required** (*integer*): The miners' fee required to be paid by orders for them to match this one; in BTC; required only if buying BTC (may be zero, though)
+* **fee_provided** (*integer*): The miners' fee provided; in SFR; required only if selling SFR (should not be lower than is required for acceptance in a block)
+* **fee_required** (*integer*): The miners' fee required to be paid by orders for them to match this one; in SFR; required only if buying SFR (may be zero, though)
 
 
 .. _order-match-object:
@@ -1149,7 +1149,7 @@ An object that describes a specific occurance of two orders being matched (eithe
 Send Object
 ^^^^^^^^^^^^^^^^^^^^^^^
 
-An object that describes a specific send (e.g. "simple send", of XCP, or a user defined asset):
+An object that describes a specific send (e.g. "simple send", of cSFR, or a user defined asset):
 
 * **tx_index** (*integer*): The transaction index
 * **tx_hash** (*string*): The transaction hash

@@ -43,7 +43,7 @@ def compose (db, source, quantity, overburn=False):
     burns = list(cursor.execute('''SELECT * FROM burns WHERE (status = ? AND source = ?)''', ('valid', source)))
     already_burned = sum([burn['burned'] for burn in burns])
     if quantity > (30000 * config.UNIT - already_burned) and not overburn:
-        raise exceptions.BurnError('30000 SFR may be burned per address')
+        raise exceptions.BurnError('30000 {} may be burned per address'.format(config.BTC))
 
     cursor.close()
     return (source, [(destination, quantity)], None)

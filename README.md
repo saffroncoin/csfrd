@@ -1,36 +1,36 @@
 # Description
-Counterparty is a protocol for the creation and use of decentralised financial
+cSFR is a protocol for the creation and use of decentralised financial
 instruments such as asset exchanges, contracts for difference and dividend
 payments. It uses Bitcoin as a transport layer. The contents of this
-repository, `counterpartyd`, constitute the reference implementation of the
+repository, `csfrd`, constitute the reference implementation of the
 protocol.
 
-The Counterparty protocol specification may be found at
-<https://github.com/CounterpartyXCP/Counterparty>.
+The cSFR protocol specification may be found at
+<https://github.com/cSFRXCP/cSFR>.
 
 # Dependencies
 * [Python 3](http://python.org)
-* Python 3 packages: apsw, requests, appdirs, prettytable, python-dateutil, json-rpc, tornado, flask, Flask-HTTPAuth, pycoin, pyzmq(v2.2+), pycrypto (see [this link](https://github.com/CounterpartyXCP/counterpartyd/blob/master/pip-requirements.txt) for exact working versions)
+* Python 3 packages: apsw, requests, appdirs, prettytable, python-dateutil, json-rpc, tornado, flask, Flask-HTTPAuth, pycoin, pyzmq(v2.2+), pycrypto (see [this link](https://github.com/cSFRXCP/csfrd/blob/master/pip-requirements.txt) for exact working versions)
 * Bitcoind
 
 # Installation
 
-**NOTE: This section covers manual installation of counterpartyd. If you want more of
-an automated approach to counterpartyd installation for Windows and Linux, see [this link](http://counterpartyd-build.readthedocs.org/en/latest/).**
+**NOTE: This section covers manual installation of csfrd. If you want more of
+an automated approach to csfrd installation for Windows and Linux, see [this link](http://csfrd-build.readthedocs.org/en/latest/).**
 
-In order for counterpartyd to function, it must be able to communicate with a
+In order for csfrd to function, it must be able to communicate with a
 running instance of Bitcoind or Bitcoin-Qt, which handles many Bitcoin‐specific
 matters on its behalf, including all wallet and private key management. For
 such interoperability, Bitcoind must be run with the following options:
 `-txindex=1` `-server=1`. This may require the setting of a JSON‐RPC password,
 which may be saved in Bitcoind’s configuration file.
 
-counterpartyd needs to know at least the JSON‐RPC password of the Bitcoind with
+csfrd needs to know at least the JSON‐RPC password of the Bitcoind with
 which it is supposed to communicate. The simplest way to set this is to
-include it in all command‐line invocations of counterpartyd, such as
-`./counterpartyd.py --rpc-password=PASSWORD ACTION`. To make this and other
-options persistent across counterpartyd sessions, one may store the desired
-settings in a configuration file specific to counterpartyd.
+include it in all command‐line invocations of csfrd, such as
+`./csfrd.py --rpc-password=PASSWORD ACTION`. To make this and other
+options persistent across csfrd sessions, one may store the desired
+settings in a configuration file specific to csfrd.
 
 Note that the syntaxes for the countpartyd and the Bitcoind configuraion
 files are not the same. A Bitcoind configuration file looks like this:
@@ -41,21 +41,21 @@ files are not the same. A Bitcoind configuration file looks like this:
 	txindex=1
 	server=1
 
-However, a counterpartyd configuration file looks like this:
+However, a csfrd configuration file looks like this:
 
 	[Default]
 	bitcoind-rpc-password=PASSWORD
 
 Note the change in hyphenation between `rpcpassword` and `rpc-password`.
 
-If and only if counterpartyd is to be run on the Bitcoin testnet, with the
+If and only if csfrd is to be run on the Bitcoin testnet, with the
 `--testnet` CLI option, Bitcoind must be set to do the same (`-testnet=1`).
-counterpartyd may run with the `--testcoin` option on any blockchain,
+csfrd may run with the `--testcoin` option on any blockchain,
 however.
 
 # Updating your requirements
 
-Sometimes the underlying package requirements may change for `counterpartyd`. If you build and installed it from scratch,
+Sometimes the underlying package requirements may change for `csfrd`. If you build and installed it from scratch,
 you can manually update these requirements by executing something like:
 
     ```pip install --upgrade -r pip-requirements.txt```
@@ -64,19 +64,19 @@ you can manually update these requirements by executing something like:
 
 The test suite is invoked with `py.test` in the root directory of the repository.
 Bitcoind testnet and mainnet must run on the default ports and use the same rpcuser and rpcpassword. 
-Do not include the following values ​​in counterpartyd.conf: bitcoind-rpc-connect, bitcoind-rpc-port, rpc-host, rpc-port and testnet.
+Do not include the following values ​​in csfrd.conf: bitcoind-rpc-connect, bitcoind-rpc-port, rpc-host, rpc-port and testnet.
 
 # Usage
-The command‐line syntax of counterpartyd is generally that of
-`./counterpartyd.py {OPTIONS} ACTION {ACTION-OPTIONS}`. There is a one action
+The command‐line syntax of csfrd is generally that of
+`./csfrd.py {OPTIONS} ACTION {ACTION-OPTIONS}`. There is a one action
 per message type, which action produces and broadcasts such a message; the
 message parameters are specified following the name of the message type. There
 are also actions which do not correspond to message types, but rather exist to
-provide information about the state of the Counterparty network, e.g. current
+provide information about the state of the cSFR network, e.g. current
 balances or open orders.
 
 For a summary of the command‐line arguments and options, see
-`./counterpartyd.py --help`.
+`./csfrd.py --help`.
 
 # Versioning
 * Major version changes require a full rebuild of the database.
@@ -88,7 +88,7 @@ For a summary of the command‐line arguments and options, see
 * Quantities of indivisible assets are written as integers.
 * All other quantities, i.e. prices, odds, leverages, feed values and target
 values, fee multipliers, are specified to four decimal places.
-* counterpartyd identifies an Order, Bet, Order Match or Bet Match by an
+* csfrd identifies an Order, Bet, Order Match or Bet Match by an
 ‘Order ID’, ‘Bet ID’, ‘Order Match ID’, or ‘Bet Match ID’, respectively. Match
 IDs are concatenations of the hashes of the two transactions which compose the
 corresponding Match, in the order of their appearances in the blockchain.
@@ -149,7 +149,7 @@ The following examples are abridged for parsimony.
 	--fee-multiplier=0.001
 	```
 
-	Note: for some users counterpartyd has trouble parsing spaces in the `--text` argument. One workaround is to
+	Note: for some users csfrd has trouble parsing spaces in the `--text` argument. One workaround is to
 		add an additional set of quotes. For example, `--text='"Bitcoin price feed"'`.
 
 * Bet
@@ -224,5 +224,5 @@ The following examples are abridged for parsimony.
 
 * Address
 
-	The `address` action displays the details of of all transactions involving the Counterparty address which is its argument.
+	The `address` action displays the details of of all transactions involving the cSFR address which is its argument.
 

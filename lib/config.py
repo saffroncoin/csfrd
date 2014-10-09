@@ -14,7 +14,7 @@ VERSION_REVISION = 0
 VERSION_STRING = str(VERSION_MAJOR) + '.' + str(VERSION_MINOR) + '.' + str(VERSION_REVISION)
 
 
-# Counterparty protocol
+# cSFR protocol
 TXTYPE_FORMAT = '>I'
 
 TWO_WEEKS = 2 * 7 * 24 * 3600

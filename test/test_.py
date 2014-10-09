@@ -29,12 +29,12 @@ sys.path.append(os.path.normpath(os.path.join(CURR_DIR, '..')))
 
 from lib import (config, api, util, exceptions, bitcoin, blocks)
 from lib import (send, order, btcpay, issuance, broadcast, bet, dividend, burn, cancel, callback, rps, rpsresolve)
-import counterpartyd
+import csfrd
 
 # config.BLOCK_FIRST = 0
 # config.BURN_START = 0
 # config.BURN_END = 9999999
-counterpartyd.set_options(rpc_port=9999, database_file=CURR_DIR+'/counterpartyd.unittest.db', testnet=True, testcoin=False, unittest=True, backend_rpc_ssl_verify=False)
+csfrd.set_options(rpc_port=9999, database_file=CURR_DIR+'/csfrd.unittest.db', testnet=True, testcoin=False, unittest=True, backend_rpc_ssl_verify=False)
 
 # unit tests private keys
 config.UNITTEST_PRIVKEY = {
@@ -170,7 +170,7 @@ def check_movment(db, movment_type, block_index, address, asset, quantity, event
     movments = list(cursor.execute(sql, bindings))
     assert len(movments) == 1
 
-# https://github.com/CounterpartyXCP/counterpartyd/blob/develop/test/db.dump#L23
+# https://github.com/cSFRXCP/csfrd/blob/develop/test/db.dump#L23
 # some sqlite version generates spaces and line breaks too.
 def clean_sqlite_dump(dump):
     dump = "\n".join(dump)
@@ -601,20 +601,20 @@ def do_book(testnet):
         block_index = int(f.readlines()[-1][7:13])
 
     # Use temporary DB.
-    counterpartyd.set_options(testnet=testnet)
+    csfrd.set_options(testnet=testnet)
     default_db = config.DATABASE
     temp_db = tempfile.gettempdir() + '/' + os.path.basename(config.DATABASE)
     shutil.copyfile(default_db, temp_db)
-    counterpartyd.set_options(database_file=temp_db, testnet=testnet)
+    csfrd.set_options(database_file=temp_db, testnet=testnet)
     db = util.connect_to_db()
     cursor = db.cursor()
 
     # TODO: USE API
     import subprocess
     if testnet:
-        subprocess.check_call(['./counterpartyd.py', '--database-file=' + temp_db, '--testnet', 'reparse'])
+        subprocess.check_call(['./csfrd.py', '--database-file=' + temp_db, '--testnet', 'reparse'])
     else:
-        subprocess.check_call(['./counterpartyd.py', '--database-file=' + temp_db, 'reparse'])
+        subprocess.check_call(['./csfrd.py', '--database-file=' + temp_db, 'reparse'])
 
     # Get new book.
     with open(new, 'w') as f:

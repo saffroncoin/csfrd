@@ -9,8 +9,8 @@ Interacting with the API
 Overview
 ----------
 
-``counterpartyd`` features a full-fledged JSON RPC 2.0-based API, which allows
-third-party applications to perform functions on the Counterparty network
+``csfrd`` features a full-fledged JSON RPC 2.0-based API, which allows
+third-party applications to perform functions on the cSFR network
 without having to deal with the low‐level details of the protocol such as
 transaction encoding and state management.
 
@@ -18,7 +18,7 @@ transaction encoding and state management.
 Connecting and Making Requests
 ---------------------------------
 
-By default, ``counterpartyd`` will listen on port ``4000`` (if on mainnet) or port ``14000`` (on testnet) for API
+By default, ``csfrd`` will listen on port ``4000`` (if on mainnet) or port ``14000`` (on testnet) for API
 requests. 
 
 Note that this API is built on JSON-RPC 2.0, not 1.1. JSON-RPC itself is pretty lightweight, and API requests
@@ -55,13 +55,13 @@ For more information on JSON RPC, please see the `JSON RPC 2.0 specification <ht
 
 Authentication
 ^^^^^^^^^^^^^^^
-Also note that the ``counterpartyd`` API interface requires HTTP basic authentication to use. The username and password required
-are stored in the ``counterpartyd.conf`` file, as ``rpc-user`` and ``rpc-password``, respectively. You can also modify
-``rpc-host`` and ``rpc-port`` to change what interface and port number ``counterpartyd`` binds to from the defaults.
+Also note that the ``csfrd`` API interface requires HTTP basic authentication to use. The username and password required
+are stored in the ``csfrd.conf`` file, as ``rpc-user`` and ``rpc-password``, respectively. You can also modify
+``rpc-host`` and ``rpc-port`` to change what interface and port number ``csfrd`` binds to from the defaults.
 
 .. _examples:
 
-Below we provide a few examples of using the ``counterpartyd`` API. Examples in other languages are welcome,
+Below we provide a few examples of using the ``csfrd`` API. Examples in other languages are welcome,
 if you'd like to submit them to us, structured in a way to be useful to other people and use standard libraries/methods. 
 
 Python Example
@@ -172,7 +172,7 @@ Python Example
 PHP Example
 ^^^^^^^^^^^^
 
-With PHP, you can connect and query ``counterpartyd`` using the `JsonRPC <https://github.com/fguillot/JsonRPC>`__
+With PHP, you can connect and query ``csfrd`` using the `JsonRPC <https://github.com/fguillot/JsonRPC>`__
 library. Here's a simple example that will get you the asset balances for a specific address:
 
 .. code-block:: php
@@ -246,7 +246,7 @@ Floats are are ratios or floating point values with six decimal places of precis
 Filtering Read API results
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-The Counterparty API aims to be as simple and flexible as possible. To this end, it includes a straightforward
+The cSFR API aims to be as simple and flexible as possible. To this end, it includes a straightforward
 way to filter the results of most :ref:`Read API functions <read_api>` to get the data you want, and only that.
 
 For each Read API function that supports it, a ``filters`` parameter exists. To apply a filter to a specific data field,
@@ -284,17 +284,17 @@ The exact form and format of this unsigned raw transaction string is specified v
 API call:
 
 - To return the transaction as an **OP_RETURN** transaction, specify ``opreturn`` for the ``encoding`` parameter.
-  Note that as of ``bitcoind`` 0.9.0, not all Counterparty transactions are possible with OP_RETURN, due to the 40
+  Note that as of ``bitcoind`` 0.9.0, not all cSFR transactions are possible with OP_RETURN, due to the 40
   byte limit imposed by the ``bitcoind`` client in order for the transaction to be relayed on mainnet.
 - To return the transaction as a **multisig** transaction, specify ``multisig`` for the ``encoding`` parameter.
     
     - If the source address is in the local ``bitcoind`` ``wallet.dat``. ``pubkey`` can be left as ``null``.
     - If the source address is *not* in the local ``bitcoind`` ``wallet.dat``, ``pubkey`` should be set to the hex-encoded
       public key.
-- ``auto`` may also be specified to let ``counterpartyd`` choose here. Note that at this time, ``auto`` is effectively the same as
+- ``auto`` may also be specified to let ``csfrd`` choose here. Note that at this time, ``auto`` is effectively the same as
   ``multisig``.
 
-- To return the Counterparty transaction encoded into arbitrary address outputs (i.e. pubkeyhash encoding), specify
+- To return the cSFR transaction encoded into arbitrary address outputs (i.e. pubkeyhash encoding), specify
   ``pubkeyhash`` for the ``encoding`` parameter. ``pubkey`` is also required to be set (as above, with ``multisig`` encoding)
   if the source address is not contained in the local ``bitcoind`` ``wallet.dat``. Note that this method is **not** recommended
   as a first-resort, as it pollutes the UTXO set.
@@ -308,7 +308,7 @@ then have two approaches with respect to broadcasting the transaction on the net
   API method.
 - If the private key you need to sign the raw transaction is *not* in the local ``bitcoind`` ``wallet.dat``, you must first sign
   the transaction yourself (or, alternatively, you can call the ``sign_tx`` API method and specify
-  the private key string to it, and ``counterpartyd`` will sign it for you). In either case, once you have the signed,
+  the private key string to it, and ``csfrd`` will sign it for you). In either case, once you have the signed,
   hex-encoded transaction string, you can then call the ``broadcast_tx`` API method, which will then broadcast the transaction on the
   Bitcoin network for you.
   
@@ -375,7 +375,7 @@ For example: ``get_balances``, ``get_credits``, ``get_debits``, etc are all vali
 **Notes:**
 
   * Please note that the ``get_balances`` API call will not return balances for SFR itself. It only returns balances
-    for cSFR and other Counterparty assets. To get SFR-based balances, use an existing system such as Insight, blockr.io,
+    for cSFR and other cSFR assets. To get SFR-based balances, use an existing system such as Insight, blockr.io,
     or blockchain.info.
 
 
@@ -412,13 +412,13 @@ get_asset_names
 ^^^^^^^^^^^^^^^^
 **get_asset_names()**
 
-Returns a list of all existing Counterparty assets. 
+Returns a list of all existing cSFR assets. 
 
 **Parameters:** None
 
 **Return:**
 
-  A list of existing Counterparty asset names.
+  A list of existing cSFR asset names.
 
 .. _get_messages:
 
@@ -426,7 +426,7 @@ get_messages
 ^^^^^^^^^^^^^^
 **get_messages(block_index)**
 
-Return message feed activity for the specified block index. The message feed essentially tracks all counterpartyd
+Return message feed activity for the specified block index. The message feed essentially tracks all csfrd
 database actions and allows for lower-level state tracking for applications that hook into it.
    
 **Parameters:**
@@ -521,7 +521,7 @@ get_running_info
 ^^^^^^^^^^^^^^^^^
 **get_running_info()**
 
-Gets some operational parameters for counterpartyd.
+Gets some operational parameters for csfrd.
 
 **Parameters:**
 
@@ -531,14 +531,14 @@ Gets some operational parameters for counterpartyd.
 
   An object with the following parameters:
 
-  - **db_caught_up** (*boolean*): ``true`` if counterpartyd block processing is caught up with the Bitcoin blockchain, ``false`` otherwise.
-  - **bitcoin_block_count** (**integer**): The block height on the Bitcoin network (may not necessarily be the same as ``last_block``, if ``counterpartyd`` is catching up)
-  - **last_block** (*integer*): The index (height) of the last block processed by ``counterpartyd``
-  - **counterpartyd_version** (*float*): The counterpartyd program version, expressed as a float, such as 0.5
-  - **last_message_index** (*integer*): The index (ID) of the last message in the ``counterpartyd`` message feed
-  - **running_testnet** (*boolean*): ``true`` if counterpartyd is configured for testnet, ``false`` if configured on mainnet.
-  - **db_version_major** (*integer*): The major version of the current counterpartyd database
-  - **db_version_minor** (*integer*): The minor version of the current counterpartyd database
+  - **db_caught_up** (*boolean*): ``true`` if csfrd block processing is caught up with the Bitcoin blockchain, ``false`` otherwise.
+  - **bitcoin_block_count** (**integer**): The block height on the Bitcoin network (may not necessarily be the same as ``last_block``, if ``csfrd`` is catching up)
+  - **last_block** (*integer*): The index (height) of the last block processed by ``csfrd``
+  - **csfrd_version** (*float*): The csfrd program version, expressed as a float, such as 0.5
+  - **last_message_index** (*integer*): The index (ID) of the last message in the ``csfrd`` message feed
+  - **running_testnet** (*boolean*): ``true`` if csfrd is configured for testnet, ``false`` if configured on mainnet.
+  - **db_version_major** (*integer*): The major version of the current csfrd database
+  - **db_version_minor** (*integer*): The minor version of the current csfrd database
 
 
 Action/Write API Function Reference
@@ -600,10 +600,10 @@ Issue a bet against a feed.
   * **target_value (float):** Target value for Equal/NotEqual bet
   * **leverage (integer):** Leverage, as a fraction of 5040
   * **encoding (string):** The encoding method to use, see :ref:`this section <encoding_param>` for more info.  
-  * **pubkey (string):** The pubkey hex string. Required if multisig transaction encoding is specified for a key external to ``counterpartyd``'s local wallet. See :ref:`this section <encoding_param>` for more info.
+  * **pubkey (string):** The pubkey hex string. Required if multisig transaction encoding is specified for a key external to ``csfrd``'s local wallet. See :ref:`this section <encoding_param>` for more info.
   * **allow_unconfirmed_inputs (boolean):** Set to ``true`` to allow this transaction to utilize unconfirmed UTXOs as inputs.
-  * **fee (integer):** If you'd like to specify a custom miners' fee, specify it here (in satoshi). Leave as default for ``counterpartyd`` to automatically choose. 
-  * **fee_per_kb (integer):** The fee per kilobyte of transaction data constant that ``counterpartyd`` uses when deciding on the dynamic fee to use (in satoshi). Leave as default unless you know what you're doing.
+  * **fee (integer):** If you'd like to specify a custom miners' fee, specify it here (in satoshi). Leave as default for ``csfrd`` to automatically choose. 
+  * **fee_per_kb (integer):** The fee per kilobyte of transaction data constant that ``csfrd`` uses when deciding on the dynamic fee to use (in satoshi). Leave as default unless you know what you're doing.
 
 **Return:** 
 
@@ -626,10 +626,10 @@ Broadcast textual and numerical information to the network.
   * **timestamp (integer):** The timestamp of the broadcast, in Unix time.
   * **value (float):** Numerical value of the broadcast.
   * **encoding (string):** The encoding method to use, see :ref:`this section <encoding_param>` for more info.  
-  * **pubkey (string):** The pubkey hex string. Required if multisig transaction encoding is specified for a key external to ``counterpartyd``'s local wallet. See :ref:`this section <encoding_param>` for more info.
+  * **pubkey (string):** The pubkey hex string. Required if multisig transaction encoding is specified for a key external to ``csfrd``'s local wallet. See :ref:`this section <encoding_param>` for more info.
   * **allow_unconfirmed_inputs (boolean):** Set to ``true`` to allow this transaction to utilize unconfirmed UTXOs as inputs.
-  * **fee (integer):** If you'd like to specify a custom miners' fee, specify it here (in satoshi). Leave as default for ``counterpartyd`` to automatically choose. 
-  * **fee_per_kb (integer):** The fee per kilobyte of transaction data constant that ``counterpartyd`` uses when deciding on the dynamic fee to use (in satoshi). Leave as default unless you know what you're doing.
+  * **fee (integer):** If you'd like to specify a custom miners' fee, specify it here (in satoshi). Leave as default for ``csfrd`` to automatically choose. 
+  * **fee_per_kb (integer):** The fee per kilobyte of transaction data constant that ``csfrd`` uses when deciding on the dynamic fee to use (in satoshi). Leave as default unless you know what you're doing.
 
 **Return:** 
 
@@ -648,10 +648,10 @@ Create and (optionally) broadcast a BTCpay message, to settle an Order Match for
 
   * **order_match_id (string):** The concatenation of the hashes of the two transactions which compose the order match.
   * **encoding (string):** The encoding method to use, see :ref:`this section <encoding_param>` for more info.  
-  * **pubkey (string):** The pubkey hex string. Required if multisig transaction encoding is specified for a key external to ``counterpartyd``'s local wallet. See :ref:`this section <encoding_param>` for more info.
+  * **pubkey (string):** The pubkey hex string. Required if multisig transaction encoding is specified for a key external to ``csfrd``'s local wallet. See :ref:`this section <encoding_param>` for more info.
   * **allow_unconfirmed_inputs (boolean):** Set to ``true`` to allow this transaction to utilize unconfirmed UTXOs as inputs.
-  * **fee (integer):** If you'd like to specify a custom miners' fee, specify it here (in satoshi). Leave as default for ``counterpartyd`` to automatically choose. 
-  * **fee_per_kb (integer):** The fee per kilobyte of transaction data constant that ``counterpartyd`` uses when deciding on the dynamic fee to use (in satoshi). Leave as default unless you know what you're doing.
+  * **fee (integer):** If you'd like to specify a custom miners' fee, specify it here (in satoshi). Leave as default for ``csfrd`` to automatically choose. 
+  * **fee_per_kb (integer):** The fee per kilobyte of transaction data constant that ``csfrd`` uses when deciding on the dynamic fee to use (in satoshi). Leave as default unless you know what you're doing.
 
 **Return:** 
 
@@ -670,10 +670,10 @@ Burn a given quantity of SFR for cSFR (**only possible between blocks 278310 and
   * **source (string):** The address with the SFR to burn.
   * **quantity (integer):** The :ref:`quantity <quantitys>` of SFR to burn (30000 SFR maximum burn per address).
   * **encoding (string):** The encoding method to use, see :ref:`this section <encoding_param>` for more info.  
-  * **pubkey (string):** The pubkey hex string. Required if multisig transaction encoding is specified for a key external to ``counterpartyd``'s local wallet. See :ref:`this section <encoding_param>` for more info.
+  * **pubkey (string):** The pubkey hex string. Required if multisig transaction encoding is specified for a key external to ``csfrd``'s local wallet. See :ref:`this section <encoding_param>` for more info.
   * **allow_unconfirmed_inputs (boolean):** Set to ``true`` to allow this transaction to utilize unconfirmed UTXOs as inputs.
-  * **fee (integer):** If you'd like to specify a custom miners' fee, specify it here (in satoshi). Leave as default for ``counterpartyd`` to automatically choose. 
-  * **fee_per_kb (integer):** The fee per kilobyte of transaction data constant that ``counterpartyd`` uses when deciding on the dynamic fee to use (in satoshi). Leave as default unless you know what you're doing.
+  * **fee (integer):** If you'd like to specify a custom miners' fee, specify it here (in satoshi). Leave as default for ``csfrd`` to automatically choose. 
+  * **fee_per_kb (integer):** The fee per kilobyte of transaction data constant that ``csfrd`` uses when deciding on the dynamic fee to use (in satoshi). Leave as default unless you know what you're doing.
 
 **Return:** 
 
@@ -692,10 +692,10 @@ Make a call on a callable asset (where some whole or part of the asset is return
   * **source (string):** The callback source address. Must be the same address as the specified asset's owner.
   * **fraction (float):** A floating point number greater than zero but less than or equal to 1, where 0% is for a callback of 0% of the balance of each of the asset's holders, and 1 would be for a callback of 100%). For example, ``0.56`` would be 56%. Each holder of the called asset will be paid the call price for the asset, times the number of units of that asset that were called back from them.
   * **encoding (string):** The encoding method to use, see :ref:`this section <encoding_param>` for more info.  
-  * **pubkey (string):** The pubkey hex string. Required if multisig transaction encoding is specified for a key external to ``counterpartyd``'s local wallet. See :ref:`this section <encoding_param>` for more info.
+  * **pubkey (string):** The pubkey hex string. Required if multisig transaction encoding is specified for a key external to ``csfrd``'s local wallet. See :ref:`this section <encoding_param>` for more info.
   * **allow_unconfirmed_inputs (boolean):** Set to ``true`` to allow this transaction to utilize unconfirmed UTXOs as inputs.
-  * **fee (integer):** If you'd like to specify a custom miners' fee, specify it here (in satoshi). Leave as default for ``counterpartyd`` to automatically choose. 
-  * **fee_per_kb (integer):** The fee per kilobyte of transaction data constant that ``counterpartyd`` uses when deciding on the dynamic fee to use (in satoshi). Leave as default unless you know what you're doing.
+  * **fee (integer):** If you'd like to specify a custom miners' fee, specify it here (in satoshi). Leave as default for ``csfrd`` to automatically choose. 
+  * **fee_per_kb (integer):** The fee per kilobyte of transaction data constant that ``csfrd`` uses when deciding on the dynamic fee to use (in satoshi). Leave as default unless you know what you're doing.
 
 **Return:** 
 
@@ -713,10 +713,10 @@ Cancel an open order or bet you created.
 
   * **offer_hash (string):** The transaction hash of the order or bet.
   * **encoding (string):** The encoding method to use, see :ref:`this section <encoding_param>` for more info.  
-  * **pubkey (string):** The pubkey hex string. Required if multisig transaction encoding is specified for a key external to ``counterpartyd``'s local wallet. See :ref:`this section <encoding_param>` for more info.
+  * **pubkey (string):** The pubkey hex string. Required if multisig transaction encoding is specified for a key external to ``csfrd``'s local wallet. See :ref:`this section <encoding_param>` for more info.
   * **allow_unconfirmed_inputs (boolean):** Set to ``true`` to allow this transaction to utilize unconfirmed UTXOs as inputs.
-  * **fee (integer):** If you'd like to specify a custom miners' fee, specify it here (in satoshi). Leave as default for ``counterpartyd`` to automatically choose. 
-  * **fee_per_kb (integer):** The fee per kilobyte of transaction data constant that ``counterpartyd`` uses when deciding on the dynamic fee to use (in satoshi). Leave as default unless you know what you're doing.
+  * **fee (integer):** If you'd like to specify a custom miners' fee, specify it here (in satoshi). Leave as default for ``csfrd`` to automatically choose. 
+  * **fee_per_kb (integer):** The fee per kilobyte of transaction data constant that ``csfrd`` uses when deciding on the dynamic fee to use (in satoshi). Leave as default unless you know what you're doing.
 
 **Return:** 
 
@@ -737,10 +737,10 @@ Issue a dividend on a specific user defined asset.
   * **dividend_asset (string):** The :ref:`asset <assets>` that the dividends are paid in.
   * **quantity_per_unit (integer):** The :ref:`quantity <quantitys>` of cSFR rewarded per whole unit of the asset.
   * **encoding (string):** The encoding method to use, see :ref:`this section <encoding_param>` for more info.  
-  * **pubkey (string):** The pubkey hex string. Required if multisig transaction encoding is specified for a key external to ``counterpartyd``'s local wallet. See :ref:`this section <encoding_param>` for more info.
+  * **pubkey (string):** The pubkey hex string. Required if multisig transaction encoding is specified for a key external to ``csfrd``'s local wallet. See :ref:`this section <encoding_param>` for more info.
   * **allow_unconfirmed_inputs (boolean):** Set to ``true`` to allow this transaction to utilize unconfirmed UTXOs as inputs.
-  * **fee (integer):** If you'd like to specify a custom miners' fee, specify it here (in satoshi). Leave as default for ``counterpartyd`` to automatically choose. 
-  * **fee_per_kb (integer):** The fee per kilobyte of transaction data constant that ``counterpartyd`` uses when deciding on the dynamic fee to use (in satoshi). Leave as default unless you know what you're doing.
+  * **fee (integer):** If you'd like to specify a custom miners' fee, specify it here (in satoshi). Leave as default for ``csfrd`` to automatically choose. 
+  * **fee_per_kb (integer):** The fee per kilobyte of transaction data constant that ``csfrd`` uses when deciding on the dynamic fee to use (in satoshi). Leave as default unless you know what you're doing.
 
 **Return:** 
 
@@ -767,10 +767,10 @@ Issue a new asset, issue more of an existing asset, lock an asset, or transfer t
   * **description (string):** A textual description for the asset. 52 bytes max.
   * **transfer_destination (string):** The address to receive the asset (only used when *transferring* assets -- leave set to ``null`` if issuing an asset).
   * **encoding (string):** The encoding method to use, see :ref:`this section <encoding_param>` for more info.  
-  * **pubkey (string):** The pubkey hex string. Required if multisig transaction encoding is specified for a key external to ``counterpartyd``'s local wallet. See :ref:`this section <encoding_param>` for more info.
+  * **pubkey (string):** The pubkey hex string. Required if multisig transaction encoding is specified for a key external to ``csfrd``'s local wallet. See :ref:`this section <encoding_param>` for more info.
   * **allow_unconfirmed_inputs (boolean):** Set to ``true`` to allow this transaction to utilize unconfirmed UTXOs as inputs.
-  * **fee (integer):** If you'd like to specify a custom miners' fee, specify it here (in satoshi). Leave as default for ``counterpartyd`` to automatically choose. 
-  * **fee_per_kb (integer):** The fee per kilobyte of transaction data constant that ``counterpartyd`` uses when deciding on the dynamic fee to use (in satoshi). Leave as default unless you know what you're doing.
+  * **fee (integer):** If you'd like to specify a custom miners' fee, specify it here (in satoshi). Leave as default for ``csfrd`` to automatically choose. 
+  * **fee_per_kb (integer):** The fee per kilobyte of transaction data constant that ``csfrd`` uses when deciding on the dynamic fee to use (in satoshi). Leave as default unless you know what you're doing.
 
 **Return:** 
 
@@ -803,10 +803,10 @@ Issue an order request.
   * **fee_required (integer):** The miners' fee required to be paid by orders for them to match this one; in SFR; required only if buying SFR (may be zero, though). If not specified or set to ``null``, this defaults to 1% of the SFR desired for purchase.
   * **fee_provided (integer):** The miners' fee provided; in SFR; required only if selling SFR (should not be lower than is required for acceptance in a block).  If not specified or set to ``null``, this defaults to 1% of the SFR for sale. 
   * **encoding (string):** The encoding method to use, see :ref:`this section <encoding_param>` for more info.  
-  * **pubkey (string):** The pubkey hex string. Required if multisig transaction encoding is specified for a key external to ``counterpartyd``'s local wallet. See :ref:`this section <encoding_param>` for more info.
+  * **pubkey (string):** The pubkey hex string. Required if multisig transaction encoding is specified for a key external to ``csfrd``'s local wallet. See :ref:`this section <encoding_param>` for more info.
   * **allow_unconfirmed_inputs (boolean):** Set to ``true`` to allow this transaction to utilize unconfirmed UTXOs as inputs.
-  * **fee (integer):** If you'd like to specify a custom miners' fee, specify it here (in satoshi). Leave as default for ``counterpartyd`` to automatically choose. 
-  * **fee_per_kb (integer):** The fee per kilobyte of transaction data constant that ``counterpartyd`` uses when deciding on the dynamic fee to use (in satoshi). Leave as default unless you know what you're doing.
+  * **fee (integer):** If you'd like to specify a custom miners' fee, specify it here (in satoshi). Leave as default for ``csfrd`` to automatically choose. 
+  * **fee_per_kb (integer):** The fee per kilobyte of transaction data constant that ``csfrd`` uses when deciding on the dynamic fee to use (in satoshi). Leave as default unless you know what you're doing.
 
 **Return:** 
 
@@ -827,10 +827,10 @@ Send cSFR or a user defined asset.
   * **quantity (integer):** The :ref:`quantity <quantitys>` of the asset to send.
   * **asset (string):** The :ref:`asset <assets>` to send.
   * **encoding (string):** The encoding method to use, see :ref:`this section <encoding_param>` for more info.  
-  * **pubkey (string):** The pubkey hex string. Required if multisig transaction encoding is specified for a key external to ``counterpartyd``'s local wallet. See :ref:`this section <encoding_param>` for more info.
+  * **pubkey (string):** The pubkey hex string. Required if multisig transaction encoding is specified for a key external to ``csfrd``'s local wallet. See :ref:`this section <encoding_param>` for more info.
   * **allow_unconfirmed_inputs (boolean):** Set to ``true`` to allow this transaction to utilize unconfirmed UTXOs as inputs.
-  * **fee (integer):** If you'd like to specify a custom miners' fee, specify it here (in satoshi). Leave as default for ``counterpartyd`` to automatically choose. 
-  * **fee_per_kb (integer):** The fee per kilobyte of transaction data constant that ``counterpartyd`` uses when deciding on the dynamic fee to use (in satoshi). Leave as default unless you know what you're doing.
+  * **fee (integer):** If you'd like to specify a custom miners' fee, specify it here (in satoshi). Leave as default for ``csfrd`` to automatically choose. 
+  * **fee_per_kb (integer):** The fee per kilobyte of transaction data constant that ``csfrd`` uses when deciding on the dynamic fee to use (in satoshi). Leave as default unless you know what you're doing.
 
 **Return:** 
 
@@ -853,10 +853,10 @@ Open a Rock-Paper-Scissors (RPS) like game.
   * **move_random_hash (string):** A 32 bytes hex string (64 chars): sha256(sha256(random+move)). Where random is 16 bytes random number.
   * **expiration (integer):** The number of blocks for which the game should be valid.
   * **encoding (string):** The encoding method to use, see :ref:`this section <encoding_param>` for more info.  
-  * **pubkey (string):** The pubkey hex string. Required if multisig transaction encoding is specified for a key external to ``counterpartyd``'s local wallet. See :ref:`this section <encoding_param>` for more info.
+  * **pubkey (string):** The pubkey hex string. Required if multisig transaction encoding is specified for a key external to ``csfrd``'s local wallet. See :ref:`this section <encoding_param>` for more info.
   * **allow_unconfirmed_inputs (boolean):** Set to ``true`` to allow this transaction to utilize unconfirmed UTXOs as inputs.
-  * **fee (integer):** If you'd like to specify a custom miners' fee, specify it here (in satoshi). Leave as default for ``counterpartyd`` to automatically choose. 
-  * **fee_per_kb (integer):** The fee per kilobyte of transaction data constant that ``counterpartyd`` uses when deciding on the dynamic fee to use (in satoshi). Leave as default unless you know what you're doing.
+  * **fee (integer):** If you'd like to specify a custom miners' fee, specify it here (in satoshi). Leave as default for ``csfrd`` to automatically choose. 
+  * **fee_per_kb (integer):** The fee per kilobyte of transaction data constant that ``csfrd`` uses when deciding on the dynamic fee to use (in satoshi). Leave as default unless you know what you're doing.
 
 **Return:** 
 
@@ -875,10 +875,10 @@ Resolve a Rock-Paper-Scissors game.
   * **random (string):** A 16 bytes hex string (32 chars) used to generate the move_random_hash value.
   * **rps_match_id (string):** The concatenation of the hashes of the two transactions which compose the rps match.
   * **encoding (string):** The encoding method to use, see :ref:`this section <encoding_param>` for more info.  
-  * **pubkey (string):** The pubkey hex string. Required if multisig transaction encoding is specified for a key external to ``counterpartyd``'s local wallet. See :ref:`this section <encoding_param>` for more info.
+  * **pubkey (string):** The pubkey hex string. Required if multisig transaction encoding is specified for a key external to ``csfrd``'s local wallet. See :ref:`this section <encoding_param>` for more info.
   * **allow_unconfirmed_inputs (boolean):** Set to ``true`` to allow this transaction to utilize unconfirmed UTXOs as inputs.
-  * **fee (integer):** If you'd like to specify a custom miners' fee, specify it here (in satoshi). Leave as default for ``counterpartyd`` to automatically choose. 
-  * **fee_per_kb (integer):** The fee per kilobyte of transaction data constant that ``counterpartyd`` uses when deciding on the dynamic fee to use (in satoshi). Leave as default unless you know what you're doing.
+  * **fee (integer):** If you'd like to specify a custom miners' fee, specify it here (in satoshi). Leave as default for ``csfrd`` to automatically choose. 
+  * **fee_per_kb (integer):** The fee per kilobyte of transaction data constant that ``csfrd`` uses when deciding on the dynamic fee to use (in satoshi). Leave as default unless you know what you're doing.
 
 **Return:** 
 
@@ -1166,13 +1166,13 @@ An object that describes a specific send (e.g. "simple send", of cSFR, or a user
 Message Object
 ^^^^^^^^^^^^^^^^^^^^^^^
 
-An object that describes a specific event in the counterpartyd message feed (which can be used by 3rd party applications
-to track state changes to the counterpartyd database on a block-by-block basis).
+An object that describes a specific event in the csfrd message feed (which can be used by 3rd party applications
+to track state changes to the csfrd database on a block-by-block basis).
 
 * **message_index** (*integer*): The message index (i.e. transaction index)
 * **block_index** (*integer*): The block index (block number in the block chain) this event occurred on
 * **category** (*string*): A string denoting the entity that the message relates to, e.g. "credits", "burns", "debits".
-  The category matches the relevant table name in counterpartyd (see blocks.py for more info).
+  The category matches the relevant table name in csfrd (see blocks.py for more info).
 * **command** (*string*): The operation done to the table noted in **category**. This is either "insert", or "update". 
 * **bindings** (*string*): A JSON-encoded object containing the message data. The properties in this object match the
   columns in the table referred to by **category**.
@@ -1278,7 +1278,7 @@ Here the list of all possible status for each table:
 API Changes
 -------------
 
-This section documents any changes to the ``counterpartyd`` API, for version numbers where there were API-level modifications.
+This section documents any changes to the ``csfrd`` API, for version numbers where there were API-level modifications.
 
 .. _9_32_0:
 
@@ -1317,4 +1317,4 @@ This section documents any changes to the ``counterpartyd`` API, for version num
 * create_bet: ``wager`` and ``counterwager`` args are replaced by ``wager_quantity`` and ``counterwager_quantity``
 * create_issuance: parameter ``lock`` (boolean) removed (use LOCK in description)
 * create_issuance: parameter ``transfer_destination`` replaced by ``destination``
-* DatabaseError: now a DatabaseError is returned immediately if the counterpartyd database is behind the backend, instead of after fourteen seconds
+* DatabaseError: now a DatabaseError is returned immediately if the csfrd database is behind the backend, instead of after fourteen seconds

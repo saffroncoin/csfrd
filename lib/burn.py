@@ -39,7 +39,7 @@ def compose (db, source, quantity, overburn=False):
     problems = validate(db, source, destination, quantity, util.last_block(db)['block_index'], overburn=overburn)
     if problems: raise exceptions.BurnError(problems)
 
-    # Check that a maximum of 30000 SFR total is burned per address.
+    # Check that a maximum of 30k SFR total is burned per address.
     burns = list(cursor.execute('''SELECT * FROM burns WHERE (status = ? AND source = ?)''', ('valid', source)))
     already_burned = sum([burn['burned'] for burn in burns])
     if quantity > (30000 * config.UNIT - already_burned) and not overburn:
@@ -62,22 +62,22 @@ def parse (db, tx, message=None):
             sent = 0
 
     if status == 'valid':
-        # Calculate quantity of XCP earned. (Maximum 1 BTC in total, ever.)
+        # Calculate quantity of cSFR earned. (Maximum 1 BTC in total, ever.)
         cursor = db.cursor()
         cursor.execute('''SELECT * FROM burns WHERE (status = ? AND source = ?)''', ('valid', tx['source']))
         burns = cursor.fetchall()
         already_burned = sum([burn['burned'] for burn in burns])
-        ONE = 1 * config.UNIT
+        ONE = 30000 * config.UNIT
         max_burn = ONE - already_burned
         if sent > max_burn: burned = max_burn   # Exceeded maximum burn; earn what you can.
         else: burned = sent
 
         total_time = config.BURN_END - config.BURN_START
         partial_time = config.BURN_END - tx['block_index']
-        multiplier = (1000 + (500 * Fraction(partial_time, total_time)))
+        multiplier = (85 + (15 * Fraction(partial_time, total_time)))
         earned = round(burned * multiplier)
 
-        # Credit source address with earned XCP.
+        # Credit source address with earned cSFR.
         util.credit(db, tx['block_index'], tx['source'], config.XCP, earned, event=tx['tx_hash'])
     else:
         burned = 0

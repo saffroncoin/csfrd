@@ -214,7 +214,7 @@ latex_documents = [
 # (source start file, name, description, authors, manual section).
 man_pages = [
     ('index', 'csfrd', u'csfrd Documentation',
-     [u'cSFR Team'], 1)
+     [u'SFRDirect Team'], 1)
 ]
 
 # If true, show URL addresses after external links.
@@ -228,7 +228,7 @@ man_pages = [
 #  dir menu entry, description, category)
 texinfo_documents = [
   ('index', 'csfrd', u'csfrd Documentation',
-   u'cSFR Team', 'csfrd', 'One line description of project.',
+   u'SFRDirect Team', 'csfrd', 'One line description of project.',
    'Miscellaneous'),
 ]
 

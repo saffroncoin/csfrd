@@ -1,7 +1,7 @@
 """
 Initialise database.
 
-Sieve blockchain for cSFR transactions, and add them to the database.
+Sieve blockchain for Counterparty transactions, and add them to the database.
 """
 
 import os
@@ -1125,7 +1125,7 @@ def follow (db):
             else:
                 logging.debug('Status: Initialising mempool.')
 
-            # Get old csfrd mempool.
+            # Get old counterpartyd mempool.
             old_mempool = list(cursor.execute('''SELECT * FROM mempool'''))
             old_mempool_hashes = [message['tx_hash'] for message in old_mempool]
 
@@ -1140,7 +1140,7 @@ def follow (db):
             mempool = []
             for tx_hash in bitcoin.get_mempool():
 
-                # If already in csfrd mempool, copy to new one.
+                # If already in counterpartyd mempool, copy to new one.
                 if tx_hash in old_mempool_hashes:
                     for message in old_mempool:
                         if message['tx_hash'] == tx_hash:
@@ -1184,7 +1184,7 @@ def follow (db):
                             else:
                                 # If a transaction hasn’t been added to the
                                 # table `transactions`, then it’s not a
-                                # cSFR transaction.
+                                # Counterparty transaction.
                                 not_supported[tx_hash] = ''
                                 not_supported_sorted.append((block_index, tx_hash))
                                 assert False

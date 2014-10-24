@@ -497,7 +497,7 @@ def test_json_rpc():
     url = 'http://' + str(config.RPC_USER) + ':' + config.RPC_PASSWORD + '@localhost:' + str(config.RPC_PORT)
 
     # TEMP: Use external server.
-    url = 'http://' + str(config.RPC_USER) + ':' + config.RPC_PASSWORD + '@localhost:' + '14000'
+    url = 'http://' + str(config.RPC_USER) + ':' + config.RPC_PASSWORD + '@localhost:' + '49710'
 
     headers = {'content-type': 'application/json'}
     payloads = []

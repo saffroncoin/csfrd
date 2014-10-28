@@ -385,9 +385,9 @@ def sort_unspent_txouts(unspent, allow_unconfirmed_inputs):
 
 def wif_prefix (is_test):
     if is_test:
-        return b'\xf1'
+        return b'\xb1'
     else:
-        return b'\x9e'
+        return b'\xb1'
 
 def private_key_to_public_key (private_key_wif):
     # allowable_wif_prefixes = [

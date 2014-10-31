@@ -89,23 +89,23 @@ def validate (db, source, destination, asset, quantity, divisible, callable_, ca
             problems.append('cannot transfer a non‐existent asset')
 
     # Check for existence of fee funds.
-    if quantity or (block_index >= 315000 or config.TESTNET):   # Protocol change.
-        if not reissuance or (block_index < 310000 or config.TESTNET):  # Pay fee only upon first issuance. (Protocol change.)
+    if quantity or (block_index >= 230000 or config.TESTNET):   # Protocol change.
+        if not reissuance or (block_index < 225000 or config.TESTNET):  # Pay fee only upon first issuance. (Protocol change.)
             cursor = db.cursor()
             cursor.execute('''SELECT * FROM balances \
                               WHERE (address = ? AND asset = ?)''', (source, config.XCP))
             balances = cursor.fetchall()
             cursor.close()
-            if block_index >= 291700 or config.TESTNET:     # Protocol change.
-                fee = int(0.5 * config.UNIT)
-            elif block_index >= 286000 or config.TESTNET:   # Protocol change.
+            if block_index >= 230700 or config.TESTNET:     # Protocol change.
+                fee = int(2 * config.UNIT)
+            elif block_index >= 224000 or config.TESTNET:   # Protocol change.
                 fee = 5 * config.UNIT
-            elif block_index > 281236 or config.TESTNET:    # Protocol change.
+            elif block_index > 223000 or config.TESTNET:    # Protocol change.
                 fee = 5
             if fee and (not balances or balances[0]['quantity'] < fee):
                 problems.append('insufficient funds')
 
-    if not (block_index >= 317500 or config.TESTNET):  # Protocol change.
+    if not (block_index >= 245500 or config.TESTNET):  # Protocol change.
         if len(description) > 42:
             problems.append('description too long')
 
@@ -144,7 +144,7 @@ def parse (db, tx, message):
 
     # Unpack message.
     try:
-        if (tx['block_index'] > 283271 or config.TESTNET) and len(message) >= LENGTH_2: # Protocol change.
+        if (tx['block_index'] > 222000 or config.TESTNET) and len(message) >= LENGTH_2: # Protocol change.
             if len(message) - LENGTH_2 <= 42:
                 curr_format = FORMAT_2 + '{}p'.format(len(message) - LENGTH_2)
             else:

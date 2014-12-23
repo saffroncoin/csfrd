@@ -74,7 +74,7 @@ def parse (db, tx, message=None):
 
         total_time = config.BURN_END - config.BURN_START
         partial_time = config.BURN_END - tx['block_index']
-        multiplier = (85 + (15 * Fraction(partial_time, total_time)))
+        multiplier = (0.7 + (0.3 * Fraction(partial_time, total_time)))
         earned = round(burned * multiplier)
 
         # Credit source address with earned cSFR.
